@@ -8,6 +8,20 @@ const initialState = {
 
 const blocksReducer = (state = initialState, action) => {
     switch (action.type) {
+
+        case 'ADD_BLOCK': {
+            const { task, lane } = action.payload;
+
+            return {
+                ...state,
+                blocks: {
+                    ...state.blocks,
+                    [task.id]: task,
+                },
+            };
+        }
+
+
         case 'UPDATE_BLOCK': {
             const { id, data } = action.payload;
 
@@ -23,6 +37,22 @@ const blocksReducer = (state = initialState, action) => {
                 }
             };
         }
+
+        case 'EDIT_BLOCK': {
+            const { id, data } = action.payload;
+
+            return {
+                ...state,
+                blocks: {
+                    ...state.blocks,
+                    [id]: {
+                        ...state.blocks[id],
+                        ...data,
+                    },
+                },
+            };
+        }
+
         default:
             return state;
     }

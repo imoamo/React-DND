@@ -3,33 +3,25 @@ import { useSelector, useDispatch } from 'react-redux';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import BlockModal from './BlockModal';
 import BlockPreview from './BlockPreview';
+import NewTaskModal from './NewTaskModal';
 
 const Swimlanes = () => {
     const lanes = useSelector((state) => state.lanes.lanes);
     const blocks = useSelector((state) => state.blocks.blocks);
     const searchTerm = useSelector((state) => state.filter.searchTerm);
-    const dispatch = useDispatch();
 
-    const [modalData, setModalData] = useState({
-        isOpen: false,
-        blockId: null,
-        destinationLane: '',
-    });
-    const [previewData, setPreviewData] = useState({
-        isOpen: false,
-        blockId: null,
-    });
+    const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
+    const [modalData, setModalData] = useState({ isOpen: false, blockId: null, destinationLane: '' });
+    const [previewData, setPreviewData] = useState({ isOpen: false, blockId: null });
+
+    const dispatch = useDispatch();
 
     const handleDragEnd = (result) => {
         const { source, destination, draggableId } = result;
 
         if (!destination) return;
 
-        setModalData({
-            isOpen: true,
-            blockId: parseInt(draggableId),
-            destinationLane: destination.droppableId,
-        });
+        setModalData({ isOpen: true, blockId: parseInt(draggableId), destinationLane: destination.droppableId });
 
         dispatch({
             type: "MOVE_BLOCK",
@@ -42,10 +34,7 @@ const Swimlanes = () => {
     };
 
     const handleBlockClick = (blockId) => {
-        setPreviewData({
-            isOpen: true,
-            blockId,
-        });
+        setPreviewData({ isOpen: true, blockId });
     };
 
     const closeModal = () => {
@@ -57,57 +46,45 @@ const Swimlanes = () => {
     };
 
     const handleFilterChange = (e) => {
-        dispatch({
-            type: 'SET_FILTER',
-            payload: e.target.value,
-        });
+        dispatch({ type: 'SET_FILTER', payload: e.target.value });
     };
 
     return (
         <>
-            <div style={{ marginBottom: '20px' }}>
+            <button onClick={() => setIsNewTaskModalOpen(true)} className="add-task-button">
+                Add New Task
+            </button>
+
+            <div className="search-container">
                 <input
                     type="text"
                     placeholder="Search blocks..."
                     value={searchTerm}
                     onChange={handleFilterChange}
-                    style={{ padding: '10px', width: '100%' }}
+                    className="search-input"
                 />
             </div>
 
             <DragDropContext onDragEnd={handleDragEnd}>
-                <div style={{ display: 'flex', gap: '20px' }}>
+                <div className="lane-container">
                     {Object.keys(lanes).map((lane) => (
                         <Droppable droppableId={lane} key={lane}>
                             {(provided) => (
                                 <div
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
-                                    style={{
-                                        backgroundColor: '#f0f0f0',
-                                        padding: '10px',
-                                        width: '250px',
-                                        minHeight: '400px',
-                                        borderRadius: '8px',
-                                    }}
+                                    className="lane"
                                 >
                                     <h2>{lane}</h2>
                                     {lanes[lane].filter(blockId => blocks[blockId].title.toLowerCase().includes(searchTerm.toLowerCase()))
                                         .map((blockId, index) => (
-                                            <Draggable draggableId={String(blockId)} index={index} key={blockId}>
+                                            <Draggable draggableId={String(blockId)} index={index} key={`${lane}-${blockId}`}>
                                                 {(provided) => (
                                                     <div
                                                         ref={provided.innerRef}
                                                         {...provided.draggableProps}
                                                         {...provided.dragHandleProps}
-                                                        style={{
-                                                            backgroundColor: '#fff',
-                                                            padding: '10px',
-                                                            marginBottom: '10px',
-                                                            borderRadius: '4px',
-                                                            boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                                                            ...provided.draggableProps.style,
-                                                        }}
+                                                        className="block"
                                                         onClick={() => handleBlockClick(blockId)}  // Open preview on click
                                                     >
                                                         <h3>{blocks[blockId].title}</h3>
@@ -115,7 +92,8 @@ const Swimlanes = () => {
                                                     </div>
                                                 )}
                                             </Draggable>
-                                        ))}
+                                        ))
+                                    }
                                     {provided.placeholder}
                                 </div>
                             )}
@@ -135,6 +113,11 @@ const Swimlanes = () => {
                 isOpen={previewData.isOpen}
                 onClose={closePreview}
                 blockId={previewData.blockId}
+            />
+
+            <NewTaskModal
+                isOpen={isNewTaskModalOpen}
+                onClose={() => setIsNewTaskModalOpen(false)}
             />
         </>
     );

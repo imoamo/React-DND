@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import './BlockModal.css';  // Import the CSS file for BlockModal
 
 const BlockModal = ({ isOpen, onClose, blockId, destinationLane }) => {
     const [formData, setFormData] = useState({
         comment: '',
-        additionalField1: '',  // Example additional fields
+        additionalField1: '',
         additionalField2: '',
     });
     const dispatch = useDispatch();
@@ -42,13 +43,9 @@ const BlockModal = ({ isOpen, onClose, blockId, destinationLane }) => {
     if (!isOpen) return null;
 
     return (
-        <div style={{
-            position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            display: 'flex', justifyContent: 'center', alignItems: 'center'
-        }}>
-            <div style={{
-                backgroundColor: '#fff', padding: '20px', borderRadius: '8px', width: '300px',
-            }}>
+        <>
+            <div className="modal-overlay" onClick={onClose}></div>
+            <div className="modal">
                 <h2>Move Block to {destinationLane}</h2>
                 <textarea
                     name="comment"
@@ -56,26 +53,28 @@ const BlockModal = ({ isOpen, onClose, blockId, destinationLane }) => {
                     onChange={handleInputChange}
                     placeholder="Add a comment"
                     rows={3}
-                    style={{ width: '100%', marginBottom: '10px' }}
+                    className="modal-input"
                 />
                 <input
                     name="additionalField1"
                     value={formData.additionalField1}
                     onChange={handleInputChange}
                     placeholder="Additional Field 1"
-                    style={{ width: '100%', marginBottom: '10px' }}
+                    className="modal-input"
                 />
                 <input
                     name="additionalField2"
                     value={formData.additionalField2}
                     onChange={handleInputChange}
                     placeholder="Additional Field 2"
-                    style={{ width: '100%', marginBottom: '10px' }}
+                    className="modal-input"
                 />
-                <button onClick={handleSubmit} style={{ marginTop: '10px' }}>Submit</button>
-                <button onClick={onClose} style={{ marginTop: '10px', marginLeft: '10px' }}>Cancel</button>
+                <div className="modal-buttons">
+                    <button onClick={handleSubmit} className="modal-button modal-submit">Submit</button>
+                    <button onClick={onClose} className="modal-button modal-cancel">Cancel</button>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 

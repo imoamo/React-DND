@@ -1,0 +1,162 @@
+/* Overlay that covers the screen */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Modal container */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    box-sizing: border-box;
+    animation: fadeIn 0.3s ease;
+    overflow: hidden;
+    /* Prevent content from overflowing */
+}
+
+/* Input and textarea styling */
+.modal-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* Flex container for buttons */
+.modal-buttons {
+    display: flex;
+    justify-content: center;
+    /* Center buttons horizontally */
+    gap: 10px;
+    flex-wrap: wrap;
+    /* Ensure buttons wrap on small screens */
+}
+
+/* Base button styling */
+.modal-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    min-width: 100px;
+    /* Ensure buttons have a minimum width */
+    box-sizing: border-box;
+    /* Prevent overflow */
+}
+
+/* Submit button styling */
+.modal-submit {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.modal-submit:hover {
+    background-color: #0056b3;
+}
+
+.modal-submit:active {
+    transform: scale(0.98);
+}
+
+/* Cancel button styling */
+.modal-cancel {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.modal-cancel:hover {
+    background-color: #c82333;
+}
+
+.modal-cancel:active {
+    transform: scale(0.98);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .modal {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .modal-input {
+        padding: 8px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+        align-items: center;
+        /* Center buttons vertically */
+    }
+
+    .modal-button {
+        width: auto;
+        /* Allow buttons to resize */
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .modal-submit {
+        margin-bottom: 10px;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 480px) {
+    .modal {
+        width: 95%;
+    }
+
+    .modal-input {
+        padding: 6px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+        align-items: center;
+        /* Center buttons vertically */
+    }
+
+    .modal-button {
+        width: auto;
+        /* Allow buttons to resize */
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .modal-submit {
+        margin-bottom: 5px;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
